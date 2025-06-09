@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ user, profile }: SidebarProps) {
-  const avatarUrl = profile?.avatar ? urlForImage(profile.avatar).width(64).height(64).url() : undefined;
+  const avatarUrl = profile?.avatar? urlForImage(profile.avatar).width(64).height(64).url() : undefined;
 
   return (
     <aside className="w-64 space-y-6">
