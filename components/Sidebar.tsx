@@ -14,7 +14,7 @@ interface SidebarProps {
 
 export default function Sidebar({ user, profile }: SidebarProps) {
   const avatarUrl = profile?.avatar
-    ? urlForImage(profile.avatar).width(64).height(64).url()
+    ? urlForImage(profile.avatar).width(80).height(80).url()
     : user.hasImage
       ? user.imageUrl
       : undefined;
@@ -22,7 +22,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
   return (
     <aside className="w-64 space-y-6">
       <div className="flex flex-col items-center space-y-2 border p-4 rounded">
-        <Avatar className="h-16 w-16 border-2 border-border">
+        <Avatar className="h-20 w-20 border-2 border-border">
           {avatarUrl ? (
             <AvatarImage src={avatarUrl} alt={user.fullName || "User avatar"} />
           ) : (
