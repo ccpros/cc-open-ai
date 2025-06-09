@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
 import { urlForImage } from "@/lib/sanity-image";
 import type { User } from "@clerk/nextjs/server";
 import type { Image as SanityImage } from "sanity";
@@ -14,7 +13,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ user, profile }: SidebarProps) {
-  const avatarUrl = profile?.avatar ? urlForImage(profile.avatar).width(64).height(64).url() : undefined;
+  const avatarUrl = profile?.avatar
+    ? urlForImage(profile.avatar).width(64).height(64).url()
+    : user.hasImage
+      ? user.imageUrl
+      : undefined;
 
   return (
     <aside className="w-64 space-y-6">
