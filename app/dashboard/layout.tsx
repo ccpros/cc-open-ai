@@ -1,0 +1,25 @@
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import Sidebar from "@/components/Sidebar";
+import { client } from "@/app/sanity/client";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const user = await currentUser();
+  if (!user) redirect("/sign-in");
+
+  const profile = await client.fetch(
+    `*[_type == "profile" && user._ref == $id][0]{handle,bio,avatar}`,
+    { id: user.id }
+  );
+
+  return (
+    <div className="container mx-auto px-4 py-8 flex gap-6">
+      <Sidebar user={user} profile={profile} />
+      <div className="flex-1">{children}</div>
+    </div>
+  );
+}
