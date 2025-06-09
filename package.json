@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "sanity dev"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.21.0",
@@ -17,12 +18,14 @@
     "lucide-react": "^0.513.0",
     "next": "15.3.3",
     "next-sanity": "^9.12.0",
+    "svix": "^1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@sanity/cli": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

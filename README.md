@@ -16,6 +16,28 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Sanity Studio
+
+Install the Sanity CLI:
+
+```bash
+npm install -D @sanity/cli
+```
+
+Start the studio locally:
+
+```bash
+npm run studio
+```
+
+The studio runs at [http://localhost:3333/studio-cc-open-ai](http://localhost:3333/studio-cc-open-ai).
+
+To deploy your schemas to Sanity, run:
+
+```bash
+sanity deploy
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
