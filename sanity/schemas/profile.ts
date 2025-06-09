@@ -21,7 +21,8 @@ const profile = defineType({
     defineField({
       name: "avatar",
       title: "Avatar",
-      type: "image",
+      type: "string",
+      description: "URL of the profile image",
     }),
     defineField({
       name: "bio",
