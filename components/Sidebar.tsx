@@ -7,13 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 
-import Image from "next/image";
 import { urlForImage } from "@/lib/sanity-image";
-import type { User } from "@clerk/nextjs/server";
+type SidebarUser = {
+  id: string;
+  fullName: string | null;
+  firstName: string | null;
+  username: string | null;
+};
 import type { Image as SanityImage } from "sanity";
 
 interface SidebarProps {
-  user: User;
+  user: SidebarUser;
   profile?: {
     handle?: string;
     bio?: string;

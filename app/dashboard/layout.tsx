@@ -11,6 +11,13 @@ export default async function DashboardLayout({
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
+  const safeUser = {
+    id: user.id,
+    fullName: user.fullName,
+    firstName: user.firstName,
+    username: user.username,
+  };
+
   const profile = await client.fetch(
     `*[_type == "profile" && user._ref == $id][0]{handle,bio,avatar}`,
     { id: user.id }
@@ -18,7 +25,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="container mx-auto px-4 py-8 flex gap-6">
-      <Sidebar user={user} profile={profile} />
+      <Sidebar user={safeUser} profile={profile} />
       <div className="flex-1">{children}</div>
     </div>
   );
