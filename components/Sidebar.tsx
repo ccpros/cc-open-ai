@@ -16,7 +16,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ user, profile }: SidebarProps) {
-  const avatarUrl = profile?.avatar? urlForImage(profile.avatar).width(64).height(64).url() : undefined;
+  const avatarUrl = profile?.avatar
+    ? urlForImage(profile.avatar).width(64).height(64).url()
+    : "https://github.com/shadcn.png";
 
  
 
@@ -27,14 +29,10 @@ export default function Sidebar({ user, profile }: SidebarProps) {
 
 
         <Avatar className="h-16 w-16 border-2 border-border">
- 
-          {avatarUrl ? (
-            <AvatarImage src={avatarUrl} alt={user.fullName || "User avatar"} />
-          ) : (
-            <AvatarFallback className="text-xl font-semibold">
-              {user.firstName?.[0]}
-            </AvatarFallback>
-          )}
+          <AvatarImage src={avatarUrl} alt={user.fullName || "User avatar"} />
+          <AvatarFallback className="text-xl font-semibold">
+            {user.firstName?.[0]}
+          </AvatarFallback>
         </Avatar>
         <p className="font-semibold">{profile?.handle || user.username || user.id}</p>
         {profile?.bio && (
