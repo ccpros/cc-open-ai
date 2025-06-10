@@ -11,6 +11,7 @@ export default async function DashboardLayout({
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
+  // Extract only the fields we need to avoid serializing the full Clerk user
   const safeUser = {
     id: user.id,
     fullName: user.fullName,
