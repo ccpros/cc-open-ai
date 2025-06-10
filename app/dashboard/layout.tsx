@@ -11,11 +11,13 @@ export default async function DashboardLayout({
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
+  // Convert the Clerk user to a plain object before passing it to the client
+  const { id, fullName, firstName, username } = user.toJSON();
   const safeUser = {
-    id: user.id,
-    fullName: user.fullName,
-    firstName: user.firstName,
-    username: user.username,
+    id,
+    fullName,
+    firstName,
+    username,
   };
 
   const profile = await client.fetch(
