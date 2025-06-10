@@ -11,6 +11,7 @@ export default async function DashboardLayout({
   const user = await currentUser();
   if (!user) redirect("/sign-in");
 
+  // Extract only the fields we need to avoid serializing the full Clerk user
   // Convert the Clerk user to a plain object before passing it to the client
   const { id, fullName, firstName, username } = user.toJSON();
   const safeUser = {
