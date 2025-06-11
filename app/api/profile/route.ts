@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { client } from "@/app/sanity/client";
+import { ensureUser } from "@/app/sanity/user";
+
 
 export async function POST(req: NextRequest) {
   const user = await currentUser();
@@ -10,14 +12,11 @@ export async function POST(req: NextRequest) {
 
   const data = await req.json();
 
-  const userDoc = {
-    _type: "user",
-    _id: user.id,
-    clerkId: user.id,
+  await ensureUser({
+    id: user.id,
     email: user.primaryEmailAddress?.emailAddress,
     fullName: data.fullName,
-    role: "user",
-  };
+  });
 
   const profileDoc = {
     _type: "profile",
@@ -30,7 +29,6 @@ export async function POST(req: NextRequest) {
     location: data.location,
   };
 
-  await client.createIfNotExists(userDoc);
   const created = await client.createIfNotExists(profileDoc);
 
   return NextResponse.json({ profile: created });
@@ -48,6 +46,11 @@ export async function GET() {
   );
 
   if (!profile) {
+    await ensureUser({
+      id: user.id,
+      email: user.primaryEmailAddress?.emailAddress,
+      fullName: user.fullName,
+    });
     profile = await client.create({
       _type: "profile",
       user: { _type: "reference", _ref: user.id },
@@ -70,6 +73,11 @@ export async function PUT(req: NextRequest) {
   );
 
   if (!profileId) {
+    await ensureUser({
+      id: user.id,
+      email: user.primaryEmailAddress?.emailAddress,
+      fullName: user.fullName,
+    });
     const created = await client.create({
       _type: "profile",
       user: { _type: "reference", _ref: user.id },
