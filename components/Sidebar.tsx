@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -16,20 +16,24 @@ type SidebarUser = {
 };
 import type { Image as SanityImage } from "sanity";
 
-interface SidebarProps {
-  user: SidebarUser;
-  profile?: {
-    handle?: string;
-    bio?: string;
-    jobTitle?: string;
-    company?: string;
-    website?: string;
-    location?: string;
-    avatar?: SanityImage;
-  } | null;
+interface Profile {
+  handle?: string;
+  bio?: string;
+  jobTitle?: string;
+  company?: string;
+  website?: string;
+  location?: string;
+  avatar?: SanityImage;
 }
 
-export default function Sidebar({ user, profile }: SidebarProps) {
+interface SidebarProps {
+  user: SidebarUser;
+  profile?: Profile | null;
+}
+
+export default function Sidebar({ user, profile: initialProfile }: SidebarProps) {
+  const [profile, setProfile] = useState<Profile | null>(initialProfile || null);
+
   const avatarUrl = profile?.avatar
     ? urlForImage(profile.avatar).width(64).height(64).url()
     : "https://github.com/shadcn.png";
@@ -55,7 +59,11 @@ export default function Sidebar({ user, profile }: SidebarProps) {
               if (!file) return;
               const form = new FormData();
               form.append("file", file);
-              await fetch("/api/avatar", { method: "POST", body: form });
+              const res = await fetch("/api/avatar", { method: "POST", body: form });
+              if (res.ok) {
+                const data = await res.json();
+                setProfile(data.profile);
+              }
               toast.dismiss(t);
             }}
           >
@@ -65,65 +73,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
       </div>
     ));
 
-  const FieldPopup = ({
-    toastId,
-    field,
-    label,
-    defaultValue,
-  }: {
-    toastId: string | number;
-    field: string;
-    label: string;
-    defaultValue?: string;
-  }) => {
-    const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-    return (
-      <div className="p-4 rounded-md bg-background space-y-2 shadow">
-        {field === "bio" ? (
-          <textarea
-            ref={ref as React.RefObject<HTMLTextAreaElement>}
-            defaultValue={defaultValue}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          />
-        ) : (
-          <Input
-            ref={ref as React.RefObject<HTMLInputElement>}
-            defaultValue={defaultValue}
-          />
-        )}
-        <div className="flex justify-end gap-2">
-          <Button size="sm" variant="ghost" onClick={() => toast.dismiss(toastId)}>
-            Cancel
-          </Button>
-          <Button
-            size="sm"
-            onClick={async () => {
-              const value = (ref.current as HTMLInputElement | HTMLTextAreaElement)?.value;
-              await fetch("/api/profile", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ field, value }),
-              });
-              toast.dismiss(toastId);
-            }}
-          >
-            Save
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
-  const openFieldPopup = (field: string, label: string) => {
-    toast.custom((t) => (
-      <FieldPopup
-        toastId={t}
-        field={field}
-        label={label}
-        defaultValue={profile?.[field as keyof typeof profile] as string}
-      />
-    ));
-  };
 
   const EditProfilePopup = ({ toastId }: { toastId: string | number }) => {
     const handleRef = useRef<HTMLInputElement>(null);
@@ -153,7 +102,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
           <Button
             size="sm"
             onClick={async () => {
-              await fetch("/api/profile", {
+              const res = await fetch("/api/profile", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -165,6 +114,10 @@ export default function Sidebar({ user, profile }: SidebarProps) {
                   location: locationRef.current?.value,
                 }),
               });
+              if (res.ok) {
+                const data = await res.json();
+                setProfile(data.profile);
+              }
               toast.dismiss(toastId);
             }}
           >
@@ -197,11 +150,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
       <div className="space-y-4">
         <div>
           <h3 className="font-medium">Handle</h3>
-          {profile?.handle ? (
-            <p>{profile.handle}</p>
-          ) : (
-            <Button size="sm" onClick={() => openFieldPopup("handle", "Handle")}>Add handle</Button>
-          )}
+          <p>{profile?.handle || "Not provided"}</p>
         </div>
         <div>
           <h3 className="font-medium">Bio</h3>
@@ -210,43 +159,27 @@ export default function Sidebar({ user, profile }: SidebarProps) {
               {profile.bio.length > 80 ? profile.bio.slice(0, 77) + "..." : profile.bio}
             </p>
           ) : (
-            <Button size="sm" onClick={() => openFieldPopup("bio", "Bio")}>Add bio</Button>
+            <p className="text-sm text-muted-foreground">Not provided</p>
           )}
         </div>
         <div>
           <h3 className="font-medium">Job Title</h3>
-          {profile?.jobTitle ? (
-            <p>{profile.jobTitle}</p>
-          ) : (
-            <Button size="sm" onClick={() => openFieldPopup("jobTitle", "Job Title")}>Add job title</Button>
-          )}
+          <p>{profile?.jobTitle || "Not provided"}</p>
         </div>
         <div>
           <h3 className="font-medium">Company</h3>
-          {profile?.company ? (
-            <p>{profile.company}</p>
-          ) : (
-            <Button size="sm" onClick={() => openFieldPopup("company", "Company")}>Add company</Button>
-          )}
+          <p>{profile?.company || "Not provided"}</p>
         </div>
         <div>
           <h3 className="font-medium">Website</h3>
-          {profile?.website ? (
-            <p>{profile.website}</p>
-          ) : (
-            <Button size="sm" onClick={() => openFieldPopup("website", "Website")}>Add website</Button>
-          )}
+          <p>{profile?.website || "Not provided"}</p>
         </div>
         <div>
           <h3 className="font-medium">Location</h3>
-          {profile?.location ? (
-            <p>{profile.location}</p>
-          ) : (
-            <Button size="sm" onClick={() => openFieldPopup("location", "Location")}>Add location</Button>
-          )}
+          <p>{profile?.location || "Not provided"}</p>
         </div>
         <Button size="sm" onClick={openEditProfilePopup} className="w-full">
-          Modify Profile
+          Update Profile
         </Button>
       </div>
     </aside>

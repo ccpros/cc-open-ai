@@ -13,16 +13,32 @@ export default async function DashboardLayout({
 
   // Build a plain user object so we don't pass a Clerk class instance to the client
   const safeUser = {
-    id,
-    fullName,
-    firstName,
-    username,
+    id: user.id,
+    fullName: user.fullName,
+    firstName: user.firstName,
+    username: user.username,
   };
 
-  const profile = await client.fetch(
-    `*[_type == "profile" && user._ref == $id][0]{handle,bio,avatar}`,
+  let profile = await client.fetch(
+    `*[_type == "profile" && user._ref == $id][0]{
+      _id,
+      handle,
+      bio,
+      jobTitle,
+      company,
+      website,
+      location,
+      avatar
+    }`,
     { id: user.id }
   );
+
+  if (!profile) {
+    profile = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+    });
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 flex gap-6">
