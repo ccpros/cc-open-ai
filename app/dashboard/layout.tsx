@@ -22,8 +22,6 @@ export default async function DashboardLayout({
   let profile = await client.fetch(
     `*[_type == "profile" && user._ref == $id][0]{
       _id,
-  const profile = await client.fetch(
-    `*[_type == "profile" && user._ref == $id][0]{
       handle,
       bio,
       jobTitle,
