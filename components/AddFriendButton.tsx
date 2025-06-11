@@ -13,6 +13,12 @@ export default function AddFriendButton({
   viewerId,
   existing,
 }: Props) {
+
+
+  existing: any;
+}
+
+export default function AddFriendButton({ targetId, existing }: Props) {
   const [status, setStatus] = useState(existing?.status || 'idle');
 
   const sendRequest = async () => {
@@ -34,6 +40,8 @@ export default function AddFriendButton({
   if (status === 'pending' && existing?.friendId === viewerId) {
     return <Button onClick={acceptRequest}>Accept Request</Button>;
   }
+
+  if (status === 'accepted') return null;
 
   return (
     <Button onClick={sendRequest} disabled={status === 'pending'}>
