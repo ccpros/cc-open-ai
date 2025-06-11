@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import { client } from "@/app/sanity/client";
+import { ensureUser } from "@/app/sanity/user";
 
 export default async function DashboardLayout({
   children,
@@ -19,6 +20,12 @@ export default async function DashboardLayout({
     username: user.username,
   };
 
+  const docId = await ensureUser({
+    id: user.id,
+    email: user.primaryEmailAddress?.emailAddress,
+    fullName: user.fullName,
+  });
+
   let profile = await client.fetch(
     `*[_type == "profile" && user._ref == $id][0]{
       _id,
@@ -30,13 +37,13 @@ export default async function DashboardLayout({
       location,
       avatar
     }`,
-    { id: user.id }
+    { id: docId }
   );
 
   if (!profile) {
     profile = await client.create({
       _type: "profile",
-      user: { _type: "reference", _ref: user.id },
+      user: { _type: "reference", _ref: docId },
     });
   }
 
