@@ -8,7 +8,7 @@ export default async function DashboardPage() {
       _id,title,content,createdAt,
       "author": author->{fullName,"handle":*[_type=='profile' && user._ref==^._id][0].handle}
     }`
-  )
+  );
 
   return (
     <div className="relative h-full">
