@@ -31,6 +31,7 @@ export default async function UserProfilePage({ params }: { params: { handle: st
     friendship = await client.fetch(
       '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]{ _id,status,"userId":user._ref,"friendId":friend._ref }',
 
+
       '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]',
       { viewer: viewerId, target: profile.userId }
     );
