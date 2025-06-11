@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
   const data = await req.json();
 
   const docId = await ensureUser({
-  await ensureUser({
     id: user.id,
     email: user.primaryEmailAddress?.emailAddress,
     fullName: data.fullName,
