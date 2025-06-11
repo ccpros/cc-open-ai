@@ -28,6 +28,11 @@ export async function POST(req: NextRequest) {
     { id: docId }
   );
   if (!profileId) {
+    await ensureUser({
+      id: user.id,
+      email: user.primaryEmailAddress?.emailAddress,
+      fullName: user.fullName,
+    });
     const created = await client.create({
       _type: "profile",
       user: { _type: "reference", _ref: docId },
