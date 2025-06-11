@@ -5,6 +5,7 @@ import purchase from "./schemas/purchase"
 import profile from "./schemas/profile"
 import post from "./schemas/post"
 import comment from "./schemas/comment"
+import friendship from "./schemas/friendship"
 
 export const schemaTypes = [
   customer,
@@ -14,4 +15,5 @@ export const schemaTypes = [
   profile,
   post,
   comment,
+  friendship,
 ]
