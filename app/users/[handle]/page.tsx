@@ -18,14 +18,15 @@ export default async function UserProfilePage({ params }: { params: { handle: st
 
   const user = await currentUser();
   let friendship: any = null;
+  let viewerId: string | null = null;
   if (user) {
-    const viewerId = await ensureUser({
+    viewerId = await ensureUser({
       id: user.id,
       email: user.primaryEmailAddress?.emailAddress,
       fullName: user.fullName,
     });
     friendship = await client.fetch(
-      '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]',
+      '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]{ _id,status,"userId":user._ref,"friendId":friend._ref }',
       { viewer: viewerId, target: profile.userId }
     );
   }
@@ -38,8 +39,12 @@ export default async function UserProfilePage({ params }: { params: { handle: st
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
       <h1 className="text-2xl font-bold">{profile.fullName}</h1>
-      {user && user.id !== profile.userId.replace('user_', '') && (
-        <AddFriendButton targetId={profile.userId} existing={friendship} />
+      {user && viewerId && user.id !== profile.userId.replace('user_', '') && (
+        <AddFriendButton
+          targetId={profile.userId}
+          viewerId={viewerId}
+          existing={friendship}
+        />
       )}
       {profile.bio && <p>{profile.bio}</p>}
       <div className="space-y-2">
