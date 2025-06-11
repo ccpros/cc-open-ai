@@ -59,7 +59,7 @@ export async function PUT(req: NextRequest) {
     return new NextResponse("Profile not found", { status: 404 });
   }
 
-  await client.patch(profileId).set({ [data.field]: data.value }).commit();
+  await client.patch(profileId).set(data).commit();
 
   return NextResponse.json({ ok: true });
 }

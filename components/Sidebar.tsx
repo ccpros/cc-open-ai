@@ -108,6 +108,56 @@ export default function Sidebar({ user, profile }: SidebarProps) {
     ));
   };
 
+  const openEditProfilePopup = () => {
+    const handleRef = useRef<HTMLInputElement>(null);
+    const bioRef = useRef<HTMLTextAreaElement>(null);
+    const jobTitleRef = useRef<HTMLInputElement>(null);
+    const companyRef = useRef<HTMLInputElement>(null);
+    const websiteRef = useRef<HTMLInputElement>(null);
+    const locationRef = useRef<HTMLInputElement>(null);
+
+    toast.custom((t) => (
+      <div className="p-4 rounded-md bg-background space-y-2 shadow max-w-sm">
+        <Input ref={handleRef} defaultValue={profile?.handle} placeholder="Handle" />
+        <textarea
+          ref={bioRef}
+          defaultValue={profile?.bio}
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          placeholder="Bio"
+        />
+        <Input ref={jobTitleRef} defaultValue={profile?.jobTitle} placeholder="Job Title" />
+        <Input ref={companyRef} defaultValue={profile?.company} placeholder="Company" />
+        <Input ref={websiteRef} defaultValue={profile?.website} placeholder="Website" />
+        <Input ref={locationRef} defaultValue={profile?.location} placeholder="Location" />
+        <div className="flex justify-end gap-2 pt-2">
+          <Button size="sm" variant="ghost" onClick={() => toast.dismiss(t)}>
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            onClick={async () => {
+              await fetch("/api/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  handle: handleRef.current?.value,
+                  bio: bioRef.current?.value,
+                  jobTitle: jobTitleRef.current?.value,
+                  company: companyRef.current?.value,
+                  website: websiteRef.current?.value,
+                  location: locationRef.current?.value,
+                }),
+              });
+              toast.dismiss(t);
+            }}
+          >
+            Save
+          </Button>
+        </div>
+      </div>
+    ));
+  };
+
  
 
 
@@ -174,6 +224,9 @@ export default function Sidebar({ user, profile }: SidebarProps) {
             <Button size="sm" onClick={() => openFieldPopup("location", "Location")}>Add location</Button>
           )}
         </div>
+        <Button size="sm" onClick={openEditProfilePopup} className="w-full">
+          Modify Profile
+        </Button>
       </div>
     </aside>
   );
