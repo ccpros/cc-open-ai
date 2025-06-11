@@ -17,19 +17,20 @@ export async function POST(req: NextRequest) {
     contentType: file.type,
   });
 
+  const docId = await ensureUser({
+    id: user.id,
+    email: user.primaryEmailAddress?.emailAddress,
+    fullName: user.fullName,
+  });
+
   const profileId = await client.fetch(
     '*[_type=="profile" && user._ref==$id][0]._id',
-    { id: user.id }
+    { id: docId }
   );
   if (!profileId) {
-    await ensureUser({
-      id: user.id,
-      email: user.primaryEmailAddress?.emailAddress,
-      fullName: user.fullName,
-    });
     const created = await client.create({
       _type: "profile",
-      user: { _type: "reference", _ref: user.id },
+      user: { _type: "reference", _ref: docId },
       avatar: {
         _type: "image",
         asset: { _type: "reference", _ref: asset._id },
@@ -37,7 +38,6 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({ profile: created });
   }
-  if (!profileId) return new NextResponse("Profile not found", { status: 404 });
 
   const updated = await client
     .patch(profileId)

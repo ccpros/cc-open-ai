@@ -4,27 +4,29 @@ import { client } from "@/app/sanity/client";
 import { ensureUser } from "@/app/sanity/user";
 
 
-export async function POST(req: NextRequest) {
-  const user = await currentUser();
+  const docId = await ensureUser({
+    user: { _type: "reference", _ref: docId },
   if (!user) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const data = await req.json();
-
-  await ensureUser({
+  const docId = await ensureUser({
     id: user.id,
     email: user.primaryEmailAddress?.emailAddress,
-    fullName: data.fullName,
+    fullName: user.fullName,
   });
 
-  const profileDoc = {
-    _type: "profile",
-    user: { _type: "reference", _ref: user.id },
-    handle: data.handle,
-    bio: data.bio,
-    jobTitle: data.jobTitle,
-    company: data.company,
+    { id: docId }
+
+      user: { _type: "reference", _ref: docId },
+  const docId = await ensureUser({
+    id: user.id,
+    email: user.primaryEmailAddress?.emailAddress,
+    fullName: user.fullName,
+  });
+
+    { id: docId }
+      user: { _type: "reference", _ref: docId },
     website: data.website,
     location: data.location,
   };
