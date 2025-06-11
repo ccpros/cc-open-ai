@@ -13,10 +13,10 @@ export default async function DashboardLayout({
 
   // Build a plain user object so we don't pass a Clerk class instance to the client
   const safeUser = {
-    id: user.id,
-    fullName: user.fullName,
-    firstName: user.firstName,
-    username: user.username,
+    id,
+    fullName,
+    firstName,
+    username,
   };
 
   const profile = await client.fetch(
