@@ -55,8 +55,14 @@ export async function PUT(req: NextRequest) {
     '*[_type=="profile" && user._ref==$id][0]._id',
     { id: user.id }
   );
+
   if (!profileId) {
-    return new NextResponse("Profile not found", { status: 404 });
+    const created = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+      ...data,
+    });
+    return NextResponse.json({ profile: created });
   }
 
   const updated = await client.patch(profileId).set(data).commit();
