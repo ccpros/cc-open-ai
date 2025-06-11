@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { client } from "@/app/sanity/client";
 import { ensureUser } from "@/app/sanity/user";
 
+
 export async function POST(req: NextRequest) {
   const user = await currentUser();
   if (!user) {
