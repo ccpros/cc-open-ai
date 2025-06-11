@@ -126,8 +126,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
   };
 
   const EditProfilePopup = ({ toastId }: { toastId: string | number }) => {
-
-  const openEditProfilePopup = () => {
     const handleRef = useRef<HTMLInputElement>(null);
     const bioRef = useRef<HTMLTextAreaElement>(null);
     const jobTitleRef = useRef<HTMLInputElement>(null);
@@ -136,7 +134,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
     const locationRef = useRef<HTMLInputElement>(null);
 
     return (
-    toast.custom((t) => (
       <div className="p-4 rounded-md bg-background space-y-2 shadow max-w-sm">
         <Input ref={handleRef} defaultValue={profile?.handle} placeholder="Handle" />
         <textarea
@@ -151,7 +148,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
         <Input ref={locationRef} defaultValue={profile?.location} placeholder="Location" />
         <div className="flex justify-end gap-2 pt-2">
           <Button size="sm" variant="ghost" onClick={() => toast.dismiss(toastId)}>
-          <Button size="sm" variant="ghost" onClick={() => toast.dismiss(t)}>
             Cancel
           </Button>
           <Button
@@ -170,7 +166,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
                 }),
               });
               toast.dismiss(toastId);
-              toast.dismiss(t);
             }}
           >
             Save
@@ -182,7 +177,6 @@ export default function Sidebar({ user, profile }: SidebarProps) {
 
   const openEditProfilePopup = () => {
     toast.custom((t) => <EditProfilePopup toastId={t} />);
-    ));
   };
 
  
