@@ -5,9 +5,6 @@ export async function ensureUser(user: { id: string; email?: string | null; full
   const userDoc = {
     _type: "user",
     _id: docId,
-  const userDoc = {
-    _type: "user",
-    _id: user.id,
     clerkId: user.id,
     email: user.email,
     fullName: user.fullName,
