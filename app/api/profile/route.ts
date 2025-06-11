@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
 
   const data = await req.json();
 
+  const docId = await ensureUser({
   await ensureUser({
     id: user.id,
     email: user.primaryEmailAddress?.emailAddress,
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   const profileDoc = {
     _type: "profile",
-    user: { _type: "reference", _ref: user.id },
+    user: { _type: "reference", _ref: docId },
     handle: data.handle,
     bio: data.bio,
     jobTitle: data.jobTitle,
@@ -40,9 +41,15 @@ export async function GET() {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
+  const docId = await ensureUser({
+    id: user.id,
+    email: user.primaryEmailAddress?.emailAddress,
+    fullName: user.fullName,
+  });
+
   let profile = await client.fetch(
     '*[_type=="profile" && user._ref==$id][0]',
-    { id: user.id }
+    { id: docId }
   );
 
   if (!profile) {
@@ -53,7 +60,7 @@ export async function GET() {
     });
     profile = await client.create({
       _type: "profile",
-      user: { _type: "reference", _ref: user.id },
+      user: { _type: "reference", _ref: docId },
     });
   }
 
@@ -67,9 +74,15 @@ export async function PUT(req: NextRequest) {
   }
 
   const data = await req.json();
+  const docId = await ensureUser({
+    id: user.id,
+    email: user.primaryEmailAddress?.emailAddress,
+    fullName: user.fullName,
+  });
+
   const profileId = await client.fetch(
     '*[_type=="profile" && user._ref==$id][0]._id',
-    { id: user.id }
+    { id: docId }
   );
 
   if (!profileId) {
@@ -80,7 +93,7 @@ export async function PUT(req: NextRequest) {
     });
     const created = await client.create({
       _type: "profile",
-      user: { _type: "reference", _ref: user.id },
+      user: { _type: "reference", _ref: docId },
       ...data,
     });
     return NextResponse.json({ profile: created });

@@ -1,6 +1,10 @@
 import { client } from "./client"
 
 export async function ensureUser(user: { id: string; email?: string | null; fullName?: string | null }) {
+  const docId = `user_${user.id}`
+  const userDoc = {
+    _type: "user",
+    _id: docId,
   const userDoc = {
     _type: "user",
     _id: user.id,
@@ -10,4 +14,5 @@ export async function ensureUser(user: { id: string; email?: string | null; full
     role: "user",
   }
   await client.createIfNotExists(userDoc)
+  return docId
 }
