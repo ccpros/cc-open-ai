@@ -19,6 +19,11 @@ export default function Header() {
               About
             </Link>
           </li>
+          <li>
+            <Link href="/posts" className="hover:underline">
+              Posts
+            </Link>
+          </li>
           <SignedOut>
             <li>
               <Link href="/sign-in" className="hover:underline">
