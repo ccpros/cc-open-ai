@@ -28,6 +28,17 @@ export async function POST(req: NextRequest) {
     '*[_type=="profile" && user._ref==$id][0]._id',
     { id: user.id }
   );
+  if (!profileId) {
+    const created = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+      avatar: {
+        _type: "image",
+        asset: { _type: "reference", _ref: asset._id },
+      },
+    });
+    return NextResponse.json({ profile: created });
+  }
   if (!profileId) return new NextResponse("Profile not found", { status: 404 });
 
   const updated = await client

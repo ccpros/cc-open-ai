@@ -44,6 +44,27 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ profile: created });
 }
 
+export async function GET() {
+  const user = await currentUser();
+  if (!user) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  let profile = await client.fetch(
+    '*[_type=="profile" && user._ref==$id][0]',
+    { id: user.id }
+  );
+
+  if (!profile) {
+    profile = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+    });
+  }
+
+  return NextResponse.json({ profile });
+}
+
 export async function PUT(req: NextRequest) {
   const user = await currentUser();
   if (!user) {
@@ -55,8 +76,14 @@ export async function PUT(req: NextRequest) {
     '*[_type=="profile" && user._ref==$id][0]._id',
     { id: user.id }
   );
+
   if (!profileId) {
-    return new NextResponse("Profile not found", { status: 404 });
+    const created = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+      ...data,
+    });
+    return NextResponse.json({ profile: created });
   }
 
   const updated = await client.patch(profileId).set(data).commit();

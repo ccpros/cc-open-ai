@@ -19,6 +19,9 @@ export default async function DashboardLayout({
     username: user.username,
   };
 
+  let profile = await client.fetch(
+    `*[_type == "profile" && user._ref == $id][0]{
+      _id,
   const profile = await client.fetch(
     `*[_type == "profile" && user._ref == $id][0]{
       handle,
@@ -31,6 +34,13 @@ export default async function DashboardLayout({
     }`,
     { id: user.id }
   );
+
+  if (!profile) {
+    profile = await client.create({
+      _type: "profile",
+      user: { _type: "reference", _ref: user.id },
+    });
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 flex gap-6">
