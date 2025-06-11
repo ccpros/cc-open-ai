@@ -9,6 +9,10 @@ export default async function DashboardPage() {
       "author": author->{fullName,"handle":*[_type=='profile' && user._ref==^._id][0].handle}
     }`
   );
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto space-y-4 p-4">
   )
 
   return (
@@ -34,6 +38,8 @@ export default async function DashboardPage() {
           </div>
         ))}
       </div>
+      <div className="shrink-0 border-t bg-background p-4">
+
       <div className="absolute bottom-0 inset-x-0 border-t bg-background p-4">
       <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
         <CreatePostForm />

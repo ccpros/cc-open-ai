@@ -32,6 +32,7 @@ export default async function UserProfilePage({ params }: { params: { handle: st
       '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]{ _id,status,"userId":user._ref,"friendId":friend._ref }',
 
 
+
       '*[_type=="friendship" && ((user._ref==$viewer && friend._ref==$target) || (user._ref==$target && friend._ref==$viewer))][0]',
       { viewer: viewerId, target: profile.userId }
     );
@@ -51,6 +52,7 @@ export default async function UserProfilePage({ params }: { params: { handle: st
           viewerId={viewerId}
           existing={friendship}
         />
+
       {user && user.id !== profile.userId.replace('user_', '') && (
         <AddFriendButton targetId={profile.userId} existing={friendship} />
       )}

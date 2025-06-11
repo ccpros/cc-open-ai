@@ -50,7 +50,9 @@ export default async function DashboardLayout({
   return (
     <div className="container mx-auto px-4 py-8 flex gap-6">
       <Sidebar user={safeUser} profile={profile} />
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 flex flex-col min-h-[calc(100vh-160px)] relative">
+        {children}
+      </div>
     </div>
   );
 }
