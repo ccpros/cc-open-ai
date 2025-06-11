@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
   };
 
   await client.createIfNotExists(userDoc);
-  await client.createIfNotExists(profileDoc);
+  const created = await client.createIfNotExists(profileDoc);
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ profile: created });
 }
 
 export async function PUT(req: NextRequest) {
@@ -59,7 +59,7 @@ export async function PUT(req: NextRequest) {
     return new NextResponse("Profile not found", { status: 404 });
   }
 
-  await client.patch(profileId).set(data).commit();
+  const updated = await client.patch(profileId).set(data).commit();
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ profile: updated });
 }

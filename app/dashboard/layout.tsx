@@ -20,7 +20,15 @@ export default async function DashboardLayout({
   };
 
   const profile = await client.fetch(
-    `*[_type == "profile" && user._ref == $id][0]{handle,bio,avatar}`,
+    `*[_type == "profile" && user._ref == $id][0]{
+      handle,
+      bio,
+      jobTitle,
+      company,
+      website,
+      location,
+      avatar
+    }`,
     { id: user.id }
   );
 
