@@ -4,6 +4,16 @@ import { Button } from './ui/button';
 
 interface Props {
   targetId: string;
+  viewerId: string;
+  existing: any;
+}
+
+export default function AddFriendButton({
+  targetId,
+  viewerId,
+  existing,
+}: Props) {
+
   existing: any;
 }
 
@@ -16,6 +26,19 @@ export default function AddFriendButton({ targetId, existing }: Props) {
       setStatus('pending');
     }
   };
+
+  const acceptRequest = async () => {
+    const res = await fetch(`/api/friends/${existing._id}`, { method: 'PUT' });
+    if (res.ok) {
+      setStatus('accepted');
+    }
+  };
+
+  if (status === 'accepted') return null;
+
+  if (status === 'pending' && existing?.friendId === viewerId) {
+    return <Button onClick={acceptRequest}>Accept Request</Button>;
+  }
 
   if (status === 'accepted') return null;
 
