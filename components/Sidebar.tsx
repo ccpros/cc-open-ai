@@ -65,28 +65,34 @@ export default function Sidebar({ user, profile }: SidebarProps) {
       </div>
     ));
 
-  const openFieldPopup = (field: string, label: string) => {
+  const FieldPopup = ({
+    toastId,
+    field,
+    label,
+    defaultValue,
+  }: {
+    toastId: string | number;
+    field: string;
+    label: string;
+    defaultValue?: string;
+  }) => {
     const ref = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-    toast.custom((t) => (
+    return (
       <div className="p-4 rounded-md bg-background space-y-2 shadow">
         {field === "bio" ? (
           <textarea
             ref={ref as React.RefObject<HTMLTextAreaElement>}
-            defaultValue={profile?.[field as keyof typeof profile] as string}
+            defaultValue={defaultValue}
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
           />
         ) : (
           <Input
             ref={ref as React.RefObject<HTMLInputElement>}
-            defaultValue={profile?.[field as keyof typeof profile] as string}
+            defaultValue={defaultValue}
           />
         )}
         <div className="flex justify-end gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => toast.dismiss(t)}
-          >
+          <Button size="sm" variant="ghost" onClick={() => toast.dismiss(toastId)}>
             Cancel
           </Button>
           <Button
@@ -98,15 +104,28 @@ export default function Sidebar({ user, profile }: SidebarProps) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ field, value }),
               });
-              toast.dismiss(t);
+              toast.dismiss(toastId);
             }}
           >
             Save
           </Button>
         </div>
       </div>
+    );
+  };
+
+  const openFieldPopup = (field: string, label: string) => {
+    toast.custom((t) => (
+      <FieldPopup
+        toastId={t}
+        field={field}
+        label={label}
+        defaultValue={profile?.[field as keyof typeof profile] as string}
+      />
     ));
   };
+
+  const EditProfilePopup = ({ toastId }: { toastId: string | number }) => {
 
   const openEditProfilePopup = () => {
     const handleRef = useRef<HTMLInputElement>(null);
@@ -116,6 +135,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
     const websiteRef = useRef<HTMLInputElement>(null);
     const locationRef = useRef<HTMLInputElement>(null);
 
+    return (
     toast.custom((t) => (
       <div className="p-4 rounded-md bg-background space-y-2 shadow max-w-sm">
         <Input ref={handleRef} defaultValue={profile?.handle} placeholder="Handle" />
@@ -130,6 +150,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
         <Input ref={websiteRef} defaultValue={profile?.website} placeholder="Website" />
         <Input ref={locationRef} defaultValue={profile?.location} placeholder="Location" />
         <div className="flex justify-end gap-2 pt-2">
+          <Button size="sm" variant="ghost" onClick={() => toast.dismiss(toastId)}>
           <Button size="sm" variant="ghost" onClick={() => toast.dismiss(t)}>
             Cancel
           </Button>
@@ -148,6 +169,7 @@ export default function Sidebar({ user, profile }: SidebarProps) {
                   location: locationRef.current?.value,
                 }),
               });
+              toast.dismiss(toastId);
               toast.dismiss(t);
             }}
           >
@@ -155,6 +177,11 @@ export default function Sidebar({ user, profile }: SidebarProps) {
           </Button>
         </div>
       </div>
+    );
+  };
+
+  const openEditProfilePopup = () => {
+    toast.custom((t) => <EditProfilePopup toastId={t} />);
     ));
   };
 
