@@ -1,20 +1,20 @@
-import Link from 'next/link'
-import { client } from '@/app/sanity/client'
-import CreatePostForm from '@/components/CreatePostForm'
+import Link from "next/link";
+import { client } from "@/app/sanity/client";
 
-export default async function DashboardPage() {
+export default async function PostsPage() {
   const posts = await client.fetch(
     `*[_type=='post']|order(createdAt desc){
-      _id,title,content,createdAt,
+      _id,title,createdAt,
       "author": author->{fullName,"handle":*[_type=='profile' && user._ref==^._id][0].handle}
     }`
-  )
+  );
 
   return (
-    <div className="relative h-full">
-      <div className="absolute inset-x-0 top-0 bottom-36 overflow-y-auto space-y-4 p-4">
+    <div className="container mx-auto px-4 py-8 space-y-6">
+      <h1 className="text-2xl font-bold">Posts</h1>
+      <ul className="space-y-4">
         {posts.map((post: any) => (
-          <div key={post._id} className="border rounded p-4 space-y-1">
+          <li key={post._id} className="border p-4 rounded">
             <h2 className="font-semibold">
               <Link href={`/posts/${post._id}`}>{post.title}</Link>
             </h2>
@@ -27,13 +27,9 @@ export default async function DashboardPage() {
                 )}
               </p>
             )}
-            {post.content && <p className="text-sm">{post.content}</p>}
-          </div>
+          </li>
         ))}
-      </div>
-      <div className="absolute bottom-0 inset-x-0 border-t bg-background p-4">
-        <CreatePostForm />
-      </div>
+      </ul>
     </div>
-  )
+  );
 }

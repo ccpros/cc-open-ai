@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -180,6 +181,9 @@ export default function Sidebar({ user, profile: initialProfile }: SidebarProps)
         </div>
         <Button size="sm" onClick={openEditProfilePopup} className="w-full">
           Update Profile
+        </Button>
+        <Button asChild size="sm" variant="outline" className="w-full">
+          <Link href="/dashboard/posts">My Posts</Link>
         </Button>
       </div>
     </aside>
