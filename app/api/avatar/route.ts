@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({ profile: created });
   }
+  if (!profileId) return new NextResponse("Profile not found", { status: 404 });
 
   const updated = await client
     .patch(profileId)
