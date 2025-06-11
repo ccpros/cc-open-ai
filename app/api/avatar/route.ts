@@ -1,14 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import { createClient } from "next-sanity";
-
-const client = createClient({
-  projectId: "8n5iznjt",
-  dataset: "production",
-  apiVersion: "2025-06-09",
-  token: process.env.SANITY_API_TOKEN,
-  useCdn: false,
-});
+import { client } from "@/app/sanity/client";
 
 export async function POST(req: NextRequest) {
   const user = await currentUser();
