@@ -1,12 +1,8 @@
-import PostsFeed from "@/components/PostsFeed";
-
-export default function PostsPage() {
-  return <PostsFeed />;
 import Link from "next/link";
 import { client } from "@/app/sanity/client";
 import CreatePostForm from "@/components/CreatePostForm";
 
-export default async function PostsPage() {
+export default async function PostsFeed() {
   const posts = await client.fetch(
     `*[_type=='post']|order(createdAt desc){
       _id,title,content,createdAt,
