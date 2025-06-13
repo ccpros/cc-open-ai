@@ -183,7 +183,7 @@ export default function Sidebar({ user, profile: initialProfile }: SidebarProps)
           Update Profile
         </Button>
         <Button asChild size="sm" variant="outline" className="w-full">
-          <Link href="/dashboard/posts">My Posts</Link>
+          <Link href="/posts/history">My Posts</Link>
         </Button>
       </div>
     </aside>

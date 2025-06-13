@@ -1,18 +1,8 @@
-import CreatePostForm from '@/components/CreatePostForm'
-
-export default function NewPostPage() {
-  return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">New Post</h1>
-      <CreatePostForm />
-    </div>
-  )
-
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function NewPostPage() {
   const [form, setForm] = useState({ title: '', content: '' });
