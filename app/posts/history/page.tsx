@@ -21,14 +21,14 @@ export default async function MyPostsPage() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Posts</h1>
-        <Link href="/dashboard/posts/new" className="underline">
+        <Link href="/posts/new" className="underline">
           New Post
         </Link>
       </div>
       <ul className="list-disc list-inside space-y-1">
         {posts.map((post: any) => (
           <li key={post._id}>
-            <Link href={`/dashboard/posts/${post._id}/edit`}>{post.title}</Link>
+            <Link href={`/posts/${post._id}/edit`}>{post.title}</Link>
           </li>
         ))}
       </ul>

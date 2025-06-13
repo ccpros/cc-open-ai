@@ -1,20 +1,20 @@
 import Link from "next/link";
 import { client } from "@/app/sanity/client";
+import CreatePostForm from "@/components/CreatePostForm";
 
 export default async function PostsPage() {
   const posts = await client.fetch(
     `*[_type=='post']|order(createdAt desc){
-      _id,title,createdAt,
+      _id,title,content,createdAt,
       "author": author->{fullName,"handle":*[_type=='profile' && user._ref==^._id][0].handle}
     }`
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      <h1 className="text-2xl font-bold">Posts</h1>
-      <ul className="space-y-4">
+    <div className="relative h-full flex flex-col container mx-auto px-4 py-8">
+      <div className="flex-1 overflow-y-auto space-y-4 pb-40">
         {posts.map((post: any) => (
-          <li key={post._id} className="border p-4 rounded">
+          <div key={post._id} className="border rounded p-4 space-y-1">
             <h2 className="font-semibold">
               <Link href={`/posts/${post._id}`}>{post.title}</Link>
             </h2>
@@ -27,9 +27,13 @@ export default async function PostsPage() {
                 )}
               </p>
             )}
-          </li>
+            {post.content && <p className="text-sm">{post.content}</p>}
+          </div>
         ))}
-      </ul>
+      </div>
+      <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
+        <CreatePostForm />
+      </div>
     </div>
   );
 }
