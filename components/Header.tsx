@@ -1,9 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export default function Header() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/chiefcommand")) {
+    return null;
+  }
+
   return (
     <header className="bg-amber-700 text-white p-4">
       <nav className="container mx-auto flex justify-between items-center">
