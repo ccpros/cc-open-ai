@@ -6,7 +6,7 @@ import * as THREE from 'three'
 
 export default function Avatar(props: any) {
   const group = useRef<THREE.Group | null>(null)
-  const { scene, animations } = useGLTF('../public/models/avatar.glb')
+  const { scene, animations } = useGLTF('/models/avatar.glb')
   const { actions } = useAnimations(animations, group as React.MutableRefObject<THREE.Object3D>)
 
   useEffect(() => {
