@@ -1,9 +1,6 @@
 'use client'
-import dynamic from 'next/dynamic'
 
-const HologramScene = dynamic(() => import('./components/HologramScene'), {
-  ssr: false,
-})
+import HologramScene from './components/HologramScene'
 
 export default function Home() {
   return (

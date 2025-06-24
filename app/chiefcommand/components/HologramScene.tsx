@@ -42,7 +42,8 @@ function BackgroundElements() {
 
 export default function HologramScene() {
   return (
-    <Canvas camera={{ position: [0, 1.5, 4], fov: 50 }}>
+    <Canvas className="w-full h-full" camera={{ position: [0, 1.5, 4], fov: 50 }}>
+      <color attach="background" args={["black"]} />
       <ambientLight intensity={0.3} />
       <pointLight position={[2, 3, 2]} intensity={1.5} color="cyan" />
       <Stars radius={100} depth={50} count={5000} factor={4} fade />
